@@ -1,0 +1,96 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+
+
+<div class="row text-right">
+    <div class="col-12 mb-3">
+        <div class="card mb-3 box-shadow">
+            <br>
+            <div class="btn-group">
+                &nbsp; &nbsp; &nbsp; <a class="p-2 btn btn-outline-primary btn-lg btn-block"
+                                        href="{%url 'mail:mailing_create' %}">Добавить рассылку</a> &nbsp; &nbsp;
+                &nbsp;
+            </div>
+            <br>
+        </div>
+    </div>
+
+
+    <div class="col-12">
+
+        <div class="card mb-3 box-shadow">
+
+
+            <div class="card-body">
+                <h5 class="card-title">
+                    <div style="color: orange"><b> Рассылки: </b></div>
+                </h5>
+                <p class="card-text">
+                    <b>SEND</b>{{only_send}}
+
+                <table class="table table-stripped">
+                    <tr>
+                        <th>Название</th>
+                        <th>Текст рассылки</th>
+                        <th>Дата создания</th>
+                        <th>Статус</th>
+                        <th>Время рассылки</th>
+                        <th>Владелец рассылки</th>
+                        <th>Информация</th>
+                        <th>Изменить</th>
+                        <th>Удалить</th>
+                        <th>Отправить</th>
+
+                    </tr>
+
+
+                    {% for object in object_list %}
+                    {% if only_send and object.status or only_send == False %}
+
+
+                    <tr>
+
+                        <td>{{object.title}}</td>
+                        <td>{{object.message.body}}</td>
+                        <td>{{object.created_at}}</td>
+                        <td>{{object.status}}</td>
+                        <td>{{object.datetime_send}}</td>
+                        <td>{{object.user}}</td>
+
+                        <td>
+                            <a class="btn btn-primary" href="{%url 'mailapp:mailing_detail' object.pk%}" role="button">Информация</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href="{%url 'mailapp:mailing_update' object.pk%}"
+                               role="button">Изменить</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href="{%url 'mailapp:mailing_delete' object.pk%}"
+                               role="button">Удалить</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-danger" href="{%url 'mailapp:mailing_send' object.pk%}"
+                               role="button">Отправить</a>
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+                    {% endfor %}
+
+                </table>
+
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+{% endblock %}
