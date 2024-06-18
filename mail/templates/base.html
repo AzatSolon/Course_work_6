@@ -1,4 +1,5 @@
 {% load static %}
+{% load my_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,16 +11,16 @@
 </head>
 <body>
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        <a class="text-black link-underline-light" href="{% url 'mailing:home' %}">
-            <h3 class="ml-10  p-2 font-weight-normal me-lg-2" href="{% url 'mailing:home' %}">Управление рассылками</h3>
+        <a class="text-black link-underline-light" href="{% url 'mail:home' %}">
+            <h3 class="ml-10  p-2 font-weight-normal me-lg-2" href="{% url 'mail:home' %}">Управление рассылками</h3>
         </a>
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             {% if user.is_authenticated %}
-            <li><a href="{% url 'mailing:mailing_list' %}" class="nav-link px-2">Рассылки</a></li>
-            <li><a href="{% url 'mailing:client_list' %}" class="nav-link px-2">Клиенты</a></li>
-            <li><a href="{% url 'mailing:message_list' %}" class="nav-link px-2">Сообщения</a></li>
+            <li><a href="{% url 'mail:mailing_list' %}" class="nav-link px-2">Рассылки</a></li>
+            <li><a href="{% url 'mail:client_list' %}" class="nav-link px-2">Клиенты</a></li>
+            <li><a href="{% url 'mail:message_list' %}" class="nav-link px-2">Сообщения</a></li>
             {% endif %}
-            <li><a href="{% url 'blog:post_list' %}" class="nav-link px-2">Блог</a></li>
+            <li><a href="{% url 'blog:blog_list' %}" class="nav-link px-2">Блог</a></li>
             {% if perms.users.view_user %}
             <li><a href="{% url 'users:user_list' %}" class="nav-link px-2">Пользователи</a></li>
             {% endif %}

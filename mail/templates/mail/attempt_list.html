@@ -1,0 +1,36 @@
+% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row text-center">
+        <p>
+        <h5 class="my-0 font-weight-normal">{{ mailing.message }}</h5>
+        </p>
+        <div class="col-6">
+            <h3 class="my-0 font-weight-normal">Статистика отправки рассылки:</h3>
+        </div>
+        <div class="col-6">
+            <a class="my-0 font-weight-normal" href="{% url 'mail:mailing' mail.pk %}">Назад</a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Дата и время</th>
+            <th scope="col">Статус</th>
+            <th scope="col">Ответ сервера</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for attempt in object_list %}
+        <tr {% if attempt.status ==
+        'SUCCESS' %} class="table-success" {% else %} class="table-danger" {% endif %}>
+        <td>{{ attempt.attempt_date }}</td>
+        <td>{{ attempt.status }}</td>
+        <td>{{ attempt.response }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

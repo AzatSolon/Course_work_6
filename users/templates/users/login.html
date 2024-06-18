@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">
+        {% if not object %}
+        Войти
+        {% else %}
+        Войти
+        {% endif %}
+    </h1>
+</div>
+
+<div class="container">
+    <form method="post" action="" class="form-floating" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-6 mx-auto">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <p class="text-header">Введите данные</p>
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <p><button type="submit" class="btn btn-primary">Войти</button></p>
+                        <p><a href="#">Забыли пароль ?</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
