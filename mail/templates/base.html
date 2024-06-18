@@ -1,53 +1,77 @@
+<!DOCTYPE html>
 {% load static %}
 {% load my_tags %}
-
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Mailing management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Рассылка
+    {% if title %}
+        - {{title}}
+        {% endif %}
+
+    </title>
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 </head>
 <body>
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        <a class="text-black link-underline-light" href="{% url 'mail:home' %}">
-            <h3 class="ml-10  p-2 font-weight-normal me-lg-2" href="{% url 'mail:home' %}">Управление рассылками</h3>
-        </a>
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'mail:mailing_list' %}" class="nav-link px-2">Рассылки</a></li>
-            <li><a href="{% url 'mail:client_list' %}" class="nav-link px-2">Клиенты</a></li>
-            <li><a href="{% url 'mail:message_list' %}" class="nav-link px-2">Сообщения</a></li>
-            {% endif %}
-            <li><a href="{% url 'blog:blog_list' %}" class="nav-link px-2">Блог</a></li>
-            {% if perms.users.view_user %}
-            <li><a href="{% url 'users:user_list' %}" class="nav-link px-2">Пользователи</a></li>
-            {% endif %}
-        </ul>
+{% include 'mail/includes/menu.html' %}
 
-        <div class="col-md-3 text-end">
-            {% if not user.is_authenticated %}
-            <a href= "{% url 'users:login' %}" class="btn btn-outline-primary me-2">Вход</a>
-            <a href="{% url 'users:register' %}" class="btn btn-outline-primary me-4">Регистрация</a>
-            {% else %}
-            <a href="{% url 'users:profile' %}" class="btn btn-outline-dark me-2">Профиль</a>
-            <a href="{% url 'users:logout' %}" class="btn btn-primary me-4">Выход</a>
-            {% endif %}
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">
+                We will take care of our troubles
+        <br>
+        Mail
+    </h1>
+    <p class="lead">Mail - Приложение по работе с расссылками.
+        <br>
+
+    </p>
+    <p class="lead">
+
+    </p>
+
+
+</div>
+
+    {% block content %}
+    {% endblock %}
+
+
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row text-center">
+            <div class="col-3 col-md">
+                SkyStore
+                <small class="d-block mb-3 text-muted">&copy; 2023 - {% now 'Y' %}</small>
+            </div>
+            <div class="col-3 col-md">
+                <h5>Категории</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="#">Рассылки</a></li>
+                    <li><a class="text-muted" href="#">Телеграм боты</a></li>
+                    <li><a class="text-muted" href="#">Полезные утилиты</a></li>
+                    <li><a class="text-muted" href="#">Веб-приложения</a></li>
+                    <li><a class="text-muted" href="#">Микросервисы</a></li>
+                </ul>
+            </div>
+            <div class="col-3 col-md">
+                <h5>Дополнительно</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="#">Мы пишем</a></li>
+                </ul>
+            </div>
+            <div class="col-3 col-md">
+                <h5>О нас</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="{% url 'mail:contacts' %}">Контакты</a></li>
+                </ul>
+            </div>
         </div>
-    </header>
+    </footer>
+</div>
 
-{% block content %}
-{% endblock %}
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-    $(document).ready(function () {
-    $(".flatpickr-basic").flatpickr({
-    enableTime: true,
-    dateFormat: "Y-m-d H:i",
-});})
-</script>
 </body>
 </html>
