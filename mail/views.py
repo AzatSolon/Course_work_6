@@ -1,7 +1,9 @@
+import csv
 from random import sample
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView
 
@@ -48,6 +50,15 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         kwargs = super(MailingCreateView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+
+
+class MailingListViewSend(ListView):
+    model = Mailing
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['only_send'] = True
+        return context
 
 
 class MailingUpdateView(LoginRequiredMixin, UpdateView):
@@ -219,3 +230,19 @@ class AttemptListView(LoginRequiredMixin, ListView):
         mailing_pk = self.kwargs.get('pk')
         context_data['mailing'] = Mailing.objects.get(pk=mailing_pk)
         return context_data
+
+
+class ContactsTemplateView(TemplateView):
+    template_name = 'contacts.html'
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get('name', '')
+        phone = request.POST.get('phone', '')
+        message = request.POST.get('message', '')
+        print(f'{name} ({phone}) написал: {message}')
+
+        with open('contact_info.csv', mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([name, phone, message])
+
+        return HttpResponseRedirect(self.request.path)
