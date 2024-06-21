@@ -24,6 +24,7 @@ class ClientForm(StyleMixin, ModelForm):
     class Meta:
         model = Client
         fields = ['name', 'email', 'comments']
+        exclude = ('owner',)
 
 
 class MessageForm(StyleMixin, ModelForm):
@@ -39,9 +40,10 @@ class MailingForm(StyleMixin, ModelForm):
     """
     Форма для редактирования рассылки
     """
+
     class Meta:
         model = Mailing
-        fields = ['start_mailing', 'end_mailing', 'periodicity', 'status', 'message', 'clients']
+        exclude = ('next_send_time', 'owner',)
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
@@ -56,4 +58,4 @@ class MailingManagerForm(StyleMixin, ModelForm):
     """
     class Meta:
         model = Mailing
-        fields = ['status',]
+        fields = ('owner',)
