@@ -23,7 +23,7 @@ class ClientForm(StyleMixin, ModelForm):
     """
     class Meta:
         model = Client
-        fields = ['name', 'email', 'comments']
+        fields = ['name', 'email', 'comment']
         exclude = ('owner',)
 
 
@@ -48,8 +48,8 @@ class MailingForm(StyleMixin, ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super(MailingForm, self).__init__(*args, **kwargs)
-        self.fields['clients'].queryset = Client.objects.filter(client_manager=user)
-        self.fields['message'].queryset = Message.objects.filter(client_manager=user)
+        self.fields['client'].queryset = Client.objects.filter(owner=user)
+        self.fields['message'].queryset = Message.objects.filter(owner=user)
 
 
 class MailingManagerForm(StyleMixin, ModelForm):
