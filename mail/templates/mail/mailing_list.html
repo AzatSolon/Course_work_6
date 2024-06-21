@@ -1,94 +1,56 @@
-{% extends 'base.html'%}
-{% load static %}
+{% extends 'base.html' %}
+
+
 {% block content %}
-
-
-<div class="row text-right">
-    <div class="col-12 mb-3">
-        <div class="card mb-3 box-shadow">
-            <br>
-            <div class="btn-group">
-                &nbsp; &nbsp; &nbsp; <a class="p-2 btn btn-outline-primary btn-lg btn-block"
-                                        href="{%url 'mail:mailing_create' %}">Добавить рассылку</a> &nbsp; &nbsp;
-                &nbsp;
+<section class="jumbotron text-center">
+    <div class="container">
+        {% if user.is_staff %}
+        <h1 class="jumbotron-heading">Рассылки</h1>
+        <p class="lead text-muted">На этой странице отображены все рассылки!</p>
+        {% else %}
+        <h1 class="jumbotron-heading">Ваши Рассылки</h1>
+        <p class="lead text-muted">На этой странице отображены все ваши рассылки!</p>
+        {% endif %}
+    </div>
+</section>
+<div class="album py-5 bg-light">
+    <div class="container">
+        {% if not user.is_staff %}
+        <div class="col-12 mb-5">
+            <a class="btn btn-outline-primary" href="{% url 'mail:message_create' %}">Добавить рассылку</a>
+        </div>
+        {% endif %}
+        <div class="row">
+            {% for object in object_list %}
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <img class="card-img-top"
+                         src="/media/{{object.message.image}}/"
+                         alt="Card image cap"
+                         style="width: 100%; height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <p class="card-text">{{ object.message }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a href="{% url 'mail:mail' object.pk %}"
+                                   class="btn btn-sm btn-outline-success">Подробнее</a>
+                                <a href="{% url 'mail:mailing_update' object.pk %}"
+                                   class="btn btn-sm btn-outline-info">Редактировать</a>
+                                <a href="{% url 'mail:mailing_delete' object.pk %}"
+                                   class="btn btn-sm btn-outline-danger">Удалить</a>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="btn-group">
+                            <a href="{% url 'mailing:attempts' object.pk %}"
+                               class="btn btn-sm btn-outline-primary">Попытки рассылки</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <br>
+            {% endfor %}
         </div>
     </div>
-
-
-    <div class="col-12">
-
-        <div class="card mb-3 box-shadow">
-
-
-            <div class="card-body">
-                <h5 class="card-title">
-                    <div style="color: orange"><b> Рассылки: </b></div>
-                </h5>
-                <p class="card-text">
-                    <b>SEND</b>{{only_send}}
-
-                <table class="table table-stripped">
-                    <tr>
-                        <th>Название</th>
-                        <th>Текст рассылки</th>
-                        <th>Дата создания</th>
-                        <th>Статус</th>
-                        <th>Время рассылки</th>
-                        <th>Владелец рассылки</th>
-                        <th>Информация</th>
-                        <th>Изменить</th>
-                        <th>Удалить</th>
-                        <th>Отправить</th>
-
-                    </tr>
-
-
-                    {% for object in object_list %}
-                    {% if only_send and object.status or only_send == False %}
-
-
-                    <tr>
-
-                        <td>{{object.title}}</td>
-                        <td>{{object.message.body}}</td>
-                        <td>{{object.created_at}}</td>
-                        <td>{{object.status}}</td>
-                        <td>{{object.datetime_send}}</td>
-                        <td>{{object.user}}</td>
-
-                        <td>
-                            <a class="btn btn-primary" href="{%url 'mailapp:mailing_detail' object.pk%}" role="button">Информация</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-primary" href="{%url 'mailapp:mailing_update' object.pk%}"
-                               role="button">Изменить</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-primary" href="{%url 'mailapp:mailing_delete' object.pk%}"
-                               role="button">Удалить</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-danger" href="{%url 'mailapp:mailing_send' object.pk%}"
-                               role="button">Отправить</a>
-                        </td>
-
-                    </tr>
-
-                    {% endif %}
-                    {% endfor %}
-
-                </table>
-
-
-            </div>
-        </div>
-
-    </div>
-
 </div>
-
-
 
 {% endblock %}

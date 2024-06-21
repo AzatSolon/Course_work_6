@@ -164,3 +164,4 @@ if CACHE_ENABLED:
         }
     }
 
+LOGIN_URL = "users:login"

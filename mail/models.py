@@ -9,67 +9,89 @@ class Client(models.Model):
     """
     Модель клиента
     """
-    name = models.CharField(max_length=100, verbose_name='Ф.И.О.')
-    email = models.EmailField(max_length=100, verbose_name='Email')
-    comments = models.TextField(verbose_name='Комментарий')
-    client_manager = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Клиентский менеджер', **NULLABLE)
+    email = models.EmailField(verbose_name='email')
+    name = models.CharField(max_length=150, verbose_name='Имя')
+    surname = models.CharField(max_length=150, verbose_name='Фамилия')
+    patronymic = models.CharField(max_length=150, verbose_name='Отчество')
+    comment = models.TextField(verbose_name='комментарий')
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
 
     def __str__(self):
-        return f'{self.email} ({self.name})'
+        return f'{self.surname} {self.name}'
 
     class Meta:
-        verbose_name = 'Клиент'
-        verbose_name_plural = 'Клиенты'
+        verbose_name = 'клиент'
+        verbose_name_plural = 'клиенты'
 
 
 class Message(models.Model):
     """
-    Модель сообщения для отправки
+    Модель сообщения
     """
-    subject = models.CharField(max_length=100, verbose_name='Тема')
-    text = models.TextField(verbose_name='Текст')
-    client_manager = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Клиентский менеджер', **NULLABLE)
+    subject = models.CharField(max_length=150, verbose_name='тема письма')
+    message = models.TextField(verbose_name='сообщение')
+
+    image = models.ImageField(upload_to='mailing_images/', **NULLABLE, verbose_name='картинка')
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
 
     def __str__(self):
-        return f'{self.subject}'
+        return self.subject
 
     class Meta:
-        verbose_name = 'Сообщение'
-        verbose_name_plural = 'Сообщения'
+        verbose_name = 'сообщение для рассылки'
+        verbose_name_plural = 'сообщения для рассылки'
 
 
 class Mailing(models.Model):
     """
-    Модель рассылки
+    Модель Рассылки
     """
-
-    PERIODICITY_CHOICES = [
-        ('DAILY', 'Ежедневно'),
-        ('WEEKLY', 'Еженедельно'),
-        ('MONTHLY', 'Ежемесячно'),
+    CREATED = 'created'
+    COMPLETED = 'completed'
+    STARTED = 'started'
+    STATUS_VARIANTS = [
+        (CREATED, 'создана'),
+        (COMPLETED, 'завершена'),
+        (STARTED, 'запущена'),
     ]
 
-    STATUS_CHOICES = [
-        ('CREATED', 'Создана'),
-        ('IN_PROGRESS', 'В процессе'),
-        ('COMPLETED', 'Завершена'),
+    DAILY = 'daily'
+    WEEKLY = 'weekly'
+    MONTHLY = 'monthly'
+    REGULARITY_VARIANTS = [
+        (DAILY, 'раз в день'),
+        (WEEKLY, 'раз в неделю'),
+        (MONTHLY, 'раз в месяц'),
     ]
+    start_time = models.DateTimeField(verbose_name='дата и время рассылки')
+    regularity = models.CharField(max_length=50, choices=REGULARITY_VARIANTS, verbose_name='периодичность')
 
-    start_mailing = models.DateTimeField(verbose_name='Начало рассылки')
-    end_mailing = models.DateTimeField(verbose_name='Конец рассылки', **NULLABLE)
-    periodicity = models.CharField(max_length=30, choices=PERIODICITY_CHOICES, verbose_name='Периодичность')
-    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='CREATED', verbose_name='Статус')
-    message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='Сообщение')
-    clients = models.ManyToManyField(Client, verbose_name='Клиенты')
-    client_manager = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Клиентский менеджер', **NULLABLE)
+    status = models.CharField(max_length=50, choices=STATUS_VARIANTS, default=CREATED, verbose_name='статус рассылки')
+
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='сообщение')
+    client = models.ManyToManyField(Client, verbose_name='клиент')
+
+    next_send_time = models.DateTimeField()
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
+
+    def save(self, *args, **kwargs):
+        if not self.next_send_time:
+            self.next_send_time = self.start_time
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'С {self.start_mailing} {self.periodicity} ({self.status}).'
+        return self.message.subject
 
     class Meta:
-        verbose_name = 'Рассылка'
-        verbose_name_plural = 'Рассылки'
-        permissions = [('set_completed', 'Can complete mailing'), ]
+        verbose_name = 'рассылка'
+        verbose_name_plural = 'рассылки'
+        permissions = [
+            ('deactivate_mailing', 'Can deactivate mailing'),
+            ('view_all_mailings', 'Can view all mailings'),
+        ]
 
 
 class Attempt(models.Model):
