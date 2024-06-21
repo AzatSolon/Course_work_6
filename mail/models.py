@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from users.models import User
 
@@ -11,9 +12,9 @@ class Client(models.Model):
     """
     email = models.EmailField(verbose_name='email')
     name = models.CharField(max_length=150, verbose_name='Имя')
-    surname = models.CharField(max_length=150, verbose_name='Фамилия')
-    patronymic = models.CharField(max_length=150, verbose_name='Отчество')
-    comment = models.TextField(verbose_name='комментарий')
+    surname = models.CharField(max_length=150, verbose_name='Фамилия', **NULLABLE)
+    patronymic = models.CharField(max_length=150, verbose_name='Отчество', **NULLABLE)
+    comment = models.TextField(max_length=250, verbose_name='Комментарий', **NULLABLE)
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
 
@@ -30,7 +31,7 @@ class Message(models.Model):
     Модель сообщения
     """
     subject = models.CharField(max_length=150, verbose_name='тема письма')
-    message = models.TextField(verbose_name='сообщение')
+    text = models.TextField(verbose_name='сообщение')
 
     image = models.ImageField(upload_to='mailing_images/', **NULLABLE, verbose_name='картинка')
 
@@ -65,15 +66,15 @@ class Mailing(models.Model):
         (WEEKLY, 'раз в неделю'),
         (MONTHLY, 'раз в месяц'),
     ]
-    start_time = models.DateTimeField(verbose_name='дата и время рассылки')
-    regularity = models.CharField(max_length=50, choices=REGULARITY_VARIANTS, verbose_name='периодичность')
+    start_time = models.DateTimeField(default=timezone.now, verbose_name='дата и время рассылки')
+    regularity = models.CharField(max_length=50, choices=REGULARITY_VARIANTS, verbose_name='периодичность', **NULLABLE)
 
     status = models.CharField(max_length=50, choices=STATUS_VARIANTS, default=CREATED, verbose_name='статус рассылки')
 
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='сообщение')
     client = models.ManyToManyField(Client, verbose_name='клиент')
 
-    next_send_time = models.DateTimeField()
+    next_send_time = models.DateTimeField(verbose_name='следущая рассылка', **NULLABLE)
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
 

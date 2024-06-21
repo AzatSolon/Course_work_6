@@ -18,11 +18,12 @@ class MailingListView(LoginRequiredMixin, ListView):
     """
     model = Mailing
 
-    def get_queryset(self):
+    def get_queryset(self, queryset=None):
+        queryset = super().get_queryset()
         user = self.request.user
-        if user.has_perm('mailing.view_mailing'):
-            return super().get_queryset()
-        return super().get_queryset().filter(client_manager=user)
+        if not user.is_superuser and not user.groups.filter(name='manager'):
+            queryset = queryset.filter(owner=self.request.user)
+        return queryset
 
 
 class MailingDetailView(LoginRequiredMixin, DetailView):
@@ -30,6 +31,15 @@ class MailingDetailView(LoginRequiredMixin, DetailView):
     Контроллер детального просмотра рассылки
     """
     model = Mailing
+    success_url = reverse_lazy('mailing:base')
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        user = self.request.user
+        if not user.is_superuser and not user.groups.filter(name='manager') and user != self.object.owner:
+            raise PermissionDenied
+        else:
+            return self.object
 
 
 class MailingCreateView(LoginRequiredMixin, CreateView):
@@ -41,10 +51,9 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('mailing:mailing_list')
 
     def form_valid(self, form):
-        mailing = form.save()
-        mailing.client_manager = self.request.user
-        mailing.save()
-        return super().form_valid(form)
+        self.object = form.save(commit=False)
+        user = self.request.user
+        self.object.owner = user
 
     def get_form_kwargs(self):
         kwargs = super(MailingCreateView, self).get_form_kwargs()
@@ -73,7 +82,7 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_form_class(self):
         user = self.request.user
-        if user == self.object.client_manager:
+        if user == self.object.owner:
             return MailingForm
         if user.has_perm('mailing.complete_mailing'):
             return MailingManagerForm
@@ -101,7 +110,7 @@ class ClientListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
-        return super().get_queryset().filter(client_manager=user)
+        return super().get_queryset().filter(owner=user)
 
 
 class ClientDetailView(LoginRequiredMixin, DetailView):
@@ -121,7 +130,7 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         client = form.save()
-        client.client_manager = self.request.user
+        client.owner = self.request.user
         client.save()
         return super().form_valid(form)
 
@@ -153,7 +162,7 @@ class MessageListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
-        return super().get_queryset().filter(client_manager=user)
+        return super().get_queryset().filter(owner=user)
 
 
 class MessageDetailView(LoginRequiredMixin, DetailView):
@@ -173,7 +182,7 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         message = form.save()
-        message.client_manager = self.request.user
+        message.owner = self.request.user
         message.save()
         return super().form_valid(form)
 

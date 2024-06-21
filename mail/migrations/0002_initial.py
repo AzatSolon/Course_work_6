@@ -17,12 +17,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='client',
-            name='client_manager',
+            name='owner',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Клиентский менеджер'),
         ),
         migrations.AddField(
             model_name='mailing',
-            name='client_manager',
+            name='owner',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Клиентский менеджер'),
         ),
         migrations.AddField(
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='message',
-            name='client_manager',
+            name='owner',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Клиентский менеджер'),
         ),
         migrations.AddField(
