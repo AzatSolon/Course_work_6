@@ -7,24 +7,50 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Blog',
+            name="Blog",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=100, verbose_name='Заголовок')),
-                ('slug', models.CharField(blank=True, max_length=100, null=True, verbose_name='Slug')),
-                ('content', models.TextField(verbose_name='Содержимое')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='blog/image', verbose_name='Изображение')),
-                ('views_count', models.PositiveIntegerField(default=0, verbose_name='Просмотры')),
-                ('is_published', models.BooleanField(default=True, verbose_name='опубликовано')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=100, verbose_name="Заголовок")),
+                (
+                    "slug",
+                    models.CharField(
+                        blank=True, max_length=100, null=True, verbose_name="Slug"
+                    ),
+                ),
+                ("content", models.TextField(verbose_name="Содержимое")),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="blog/image",
+                        verbose_name="Изображение",
+                    ),
+                ),
+                (
+                    "views_count",
+                    models.PositiveIntegerField(default=0, verbose_name="Просмотры"),
+                ),
+                (
+                    "is_published",
+                    models.BooleanField(default=True, verbose_name="опубликовано"),
+                ),
             ],
             options={
-                'verbose_name': 'блог',
-                'verbose_name_plural': 'блоги',
+                "verbose_name": "блог",
+                "verbose_name_plural": "блоги",
             },
         ),
     ]
