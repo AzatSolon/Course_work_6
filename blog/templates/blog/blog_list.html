@@ -22,7 +22,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="col text-center">
                                 <div class="btn-group">
-                                    <a class="btn btn-light" href="{% url 'blog:blog_detail' blog.pk %}" role="button">Просмотр</a>
+                                    <a class="btn btn-light" href="{% url 'blog:view_record' blog.pk %}" role="button">Просмотр</a>
                                     <a class="btn btn-primary" href="{% url 'blog:blog_update' blog.pk %}" role="button">Редактирование</a>
                                     <a class="btn btn-danger" href="{% url 'blog:blog_delete' blog.pk %}" role="button">Удалить</a>
                                 </div>

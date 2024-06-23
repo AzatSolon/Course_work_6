@@ -5,16 +5,16 @@ from django.db import models
 
 import users
 
-NULLABLE = {'blank': True, 'null': True}
+NULLABLE = {"blank": True, "null": True}
 
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(unique=True, verbose_name='E-mail')
-    name = models.CharField(max_length=150, verbose_name='Имя')
-    last_name = models.CharField(max_length=150, verbose_name='Фамилия')
+    email = models.EmailField(unique=True, verbose_name="E-mail")
+    name = models.CharField(max_length=150, verbose_name="Имя")
+    last_name = models.CharField(max_length=150, verbose_name="Фамилия")
 
-    token = models.CharField(max_length=100, verbose_name='Токен', **NULLABLE)
+    token = models.CharField(max_length=100, verbose_name="Токен", **NULLABLE)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -23,11 +23,11 @@ class User(AbstractUser):
         return self.email
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
         permissions = [
-            ('deactivate_user', 'Can deactivate users'),
-            ('view_all_users', 'Can view all users'),
+            ("deactivate_user", "Can deactivate users"),
+            ("view_all_users", "Can view all users"),
         ]
 
 
