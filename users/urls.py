@@ -23,4 +23,5 @@ urlpatterns = [
     path("users_list/", UserListView.as_view(), name="view_all_users"),
     path("password/reset/", res_password, name="password_recovery"),
     path("detail/<int:pk>/", UserDetailView.as_view(), name="view_user"),
+    path("user_list/", UserListView.as_view(), name="user_list"),
 ]

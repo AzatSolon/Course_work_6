@@ -20,12 +20,14 @@ from mail.views import (
     AttemptListView,
     MailingListViewSend,
     ContactsTemplateView,
+    HomePage,
 )
 
 app_name = MailConfig.name
 
 urlpatterns = (
-    path("", MailingListView.as_view(), name="client_list"),
+    path("", HomePage.as_view(), name="home"),
+    path("mail/", MailingListView.as_view(), name="mailing_list"),
     path("contacts/", ContactsTemplateView.as_view(), name="contacts"),
     path("mail/<int:pk>/", MailingDetailView.as_view(), name="mail"),
     path("mail/create/", MailingCreateView.as_view(), name="mailing_create"),
