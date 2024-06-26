@@ -237,7 +237,7 @@ class HomePage(TemplateView):
     Контроллер домашней страницы
     """
 
-    template_name = "mail/home.html"
+    template_name = "base.html"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
