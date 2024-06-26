@@ -25,7 +25,7 @@ from mail.views import (
 app_name = MailConfig.name
 
 urlpatterns = (
-    path("", MailingListView.as_view(), name="mailing_list"),
+    path("", MailingListView.as_view(), name="client_list"),
     path("contacts/", ContactsTemplateView.as_view(), name="contacts"),
     path("mail/<int:pk>/", MailingDetailView.as_view(), name="mail"),
     path("mail/create/", MailingCreateView.as_view(), name="mailing_create"),

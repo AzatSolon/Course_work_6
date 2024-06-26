@@ -9,7 +9,7 @@
             <br>
             <div class="btn-group">
                 &nbsp; &nbsp; &nbsp; <a class="p-2 btn btn-outline-primary btn-lg btn-block"
-                                        href="{%url 'mail:mailing_create' %}">Добавить email</a> &nbsp; &nbsp;
+                                        href="{%url 'mail:client_create' %}">Добавить Клиента Рассылки</a> &nbsp; &nbsp;
                 &nbsp;
             </div>
             <br>
@@ -55,11 +55,11 @@
 
 
                         <td>
-                            <a class="btn btn-primary" href="{%url 'mail:mailing_update' object.pk %}"
+                            <a class="btn btn-primary" href="{%url 'mail:client_update' object.pk %}"
                                role="button">Изменить</a>
                         </td>
                         <td>
-                            <a class="btn btn-primary" href="{%url 'mail:mailing_delete' object.pk%}"
+                            <a class="btn btn-primary" href="{%url 'mail:client_delete' object.pk%}"
                                role="button">Удалить</a>
                         </td>
 
