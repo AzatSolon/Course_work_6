@@ -1,91 +1,30 @@
-{% extends 'base.html'%}
-{% load static %}
+{% extends 'base.html' %}
 {% block content %}
 
-
-<div class="row text-right">
-    <div class="col-12 mb-3">
-        <div class="card mb-3 box-shadow">
-            <br>
-            <div class="btn-group">
-                &nbsp; &nbsp; &nbsp; <a class="p-2 btn btn-outline-primary btn-lg btn-block"
-                                        href="{%url 'mail:mailing_create' %}">Добавить или изменить сообщение</a> &nbsp; &nbsp;
-                &nbsp;
-            </div>
-            <br>
+<div class="container">
+    <div class="row text-center">
+        <div class="col-2">
+            {% if user.is_authenticated %}
+            <p>
+                <a class="btn btn-primary" href="{% url 'mail:message_create' %}" role="button">Добавить сообщение</a>
+            </p>
+            {% endif %}
         </div>
     </div>
-
-
-    <div class="col-12">
-
-        <div class="card mb-3 box-shadow">
-
-
-            <div class="card-body">
-                <h5 class="card-title">
-                    <div style="color: orange"><b>{{object | title}}</b></div>
-                </h5>
-                <p class="card-text">
-
-
-                <table class="table table-stripped">
-                    <tr>
-                        <th>Сообщение</th>
-                        <th>Текст сообщения</th>
-                        <th>mailing_item</th>
-                        <th>mailing_item.message</th>
-                        <th>mailing_item.id</th>
-                        <th>object.id</th>
-                        <th>Изменить сообщение</th>
-
-                    </tr>
-
-
-                    {% for object in object_list %}
-
-
-                    <tr>
-
-                        <td>{{object.title}}</td>
-                        <td>{{object.body}}</td>
-
-                        {%for mailing_item in mailings%}
-                        {%if mailing_item.message_id == object.id%}
-
-                        <td>{{mailing_item}}</td>
-                        <td>{{mailing_item.message}}</td>
-                        <td>{{mailing_item.id}}</td>
-                        <td>{{object.id}}</td>
-                        {%endif%}
-
-
-
-
-                        {%endfor%}
-
-
-
-
-                        <td>
-                            <a class="btn btn-primary" href="{%url 'mail:message_update' object.pk %}"
-                               role="button">Изменить</a>
-                        </td>
-
-
-                    </tr>
-                    {% endfor %}
-
-                </table>
-
-                </p>
+    <div class="row text-center">
+        {% for message in object_list %}
+        <div class="col-3">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h6 class="my-0 font-weight-normal">{{ message.subject }}</h6>
+                </div>
+                <div class="card-body">
+                    <p>{{ message.text| truncatechars:50 }}</p>
+                    <a class="btn btn-outline-primary" href="{% url 'mail:message' message.pk %}">Подробнее</a>
+                </div>
             </div>
-        </div>
-
-
-    </div>
-
-
+         </div>
+     {% endfor %}
 </div>
 
 {% endblock %}

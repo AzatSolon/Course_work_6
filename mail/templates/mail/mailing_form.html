@@ -15,37 +15,19 @@
         <div class="row ">
             <div class="col-12">
                 <div class="col-10 mx-auto">
-                <div class="card mb-4 box-shadow mx-auto">
-                    <div class="card-header text-center">
-                        <h4 class="my-0 font-weight-normal">Панель создания рассылки</h4>
-                    </div>
-                    <div class="card-body text-center">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-block btn-outline-primary">Сохранить</button>
-                        <a href="{% url 'mail:mailing_list' %}" class="btn btn-block btn-outline-danger">Отмена</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-10 mx-auto">
-                <div class="card mb-4 box-shadow mx-auto">
-                    <div class="card-header text-center">
-                        <h4 class="my-0 font-weight-normal">Панель создания настроек рассылки</h4>
-                    </div>
-                    <div class="card-body text-center">
-                        {% csrf_token %}
-                        {{ formset.management_form }}
-                        {% for form in formset.forms %}
-                        {{ form.as_p }}
-                        {% endfor %}
-                        <button type="submit" class="btn btn-block btn-outline-primary">Сохранить</button>
+                    <div class="card mb-4 box-shadow mx-auto">
+                        <div class="card-header text-center">
+                            <h4 class="my-0 font-weight-normal">Панель создания рассылки</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-block btn-outline-primary">Сохранить</button>
+                            <a href="{% url 'mail:client_list' %}" class="btn btn-block btn-outline-danger">Отмена</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            </div>
 
-
-        </div>
     </form>
 </div>
 {% endif %}

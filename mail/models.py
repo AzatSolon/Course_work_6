@@ -25,8 +25,8 @@ class Client(models.Model):
         return f"{self.surname} {self.name}"
 
     class Meta:
-        verbose_name = "клиент"
-        verbose_name_plural = "клиенты"
+        verbose_name = "Kлиент"
+        verbose_name_plural = "Kлиенты"
 
 
 class Message(models.Model):
@@ -55,17 +55,8 @@ class Message(models.Model):
 
 class Mailing(models.Model):
     """
-    Модель Рассылки
+    Модель рассылки
     """
-
-    CREATED = "created"
-    COMPLETED = "completed"
-    STARTED = "started"
-    STATUS_VARIANTS = [
-        (CREATED, "создана"),
-        (COMPLETED, "завершена"),
-        (STARTED, "запущена"),
-    ]
 
     DAILY = "daily"
     WEEKLY = "weekly"
@@ -75,48 +66,37 @@ class Mailing(models.Model):
         (WEEKLY, "раз в неделю"),
         (MONTHLY, "раз в месяц"),
     ]
-    start_time = models.DateTimeField(
-        default=timezone.now, verbose_name="дата и время рассылки"
-    )
+
+    STATUS_CHOICES = [
+        ("CREATED", "Создана"),
+        ("IN_PROGRESS", "В процессе"),
+        ("COMPLETED", "Завершена"),
+    ]
+
+    start_mailing = models.DateTimeField(default=timezone.now, verbose_name='Начало рассылки')
+    end_mailing = models.DateTimeField(verbose_name="Конец рассылки", **NULLABLE)
     regularity = models.CharField(
-        max_length=50,
-        choices=REGULARITY_VARIANTS,
-        verbose_name="периодичность",
-        **NULLABLE,
-    )
-
+        max_length=30, choices=REGULARITY_VARIANTS, verbose_name="Периодичность"
+    , **NULLABLE )
     status = models.CharField(
-        max_length=50,
-        choices=STATUS_VARIANTS,
-        default=CREATED,
-        verbose_name="статус рассылки",
+        max_length=30, choices=STATUS_CHOICES, default="CREATED", verbose_name="Статус"
     )
-
     message = models.ForeignKey(
-        Message, on_delete=models.CASCADE, verbose_name="сообщение"
+        Message, on_delete=models.CASCADE, verbose_name="Сообщение"
     )
-    client = models.ManyToManyField(Client, verbose_name="клиент")
-
-    next_send_time = models.DateTimeField(verbose_name="следущая рассылка", **NULLABLE)
-
+    client = models.ManyToManyField(Client, verbose_name="Клиенты")
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="пользователь", **NULLABLE
     )
 
-    def save(self, *args, **kwargs):
-        if not self.next_send_time:
-            self.next_send_time = self.start_time
-        super().save(*args, **kwargs)
-
     def __str__(self):
-        return self.message.subject
+        return f"С {self.start_mailing} {self.regularity} ({self.status})."
 
     class Meta:
-        verbose_name = "рассылка"
-        verbose_name_plural = "рассылки"
+        verbose_name = "Рассылка"
+        verbose_name_plural = "Рассылки"
         permissions = [
-            ("deactivate_mailing", "Can deactivate mailing"),
-            ("view_all_mailings", "Can view all mailings"),
+            ("set_completed", "Can complete mailing"),
         ]
 
 
