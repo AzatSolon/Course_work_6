@@ -20,7 +20,7 @@ class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = "users/user_register.html"
-    success_url = reverse_lazy("users:profile")
+    success_url = reverse_lazy("users:login")
 
     def form_valid(self, form):
         token = ""

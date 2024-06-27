@@ -21,9 +21,11 @@ class BlogListView(ListView):
 
 class BlogDetailView(DetailView):
     model = Blog
+    template_name = "blog/blog_detail.html"
+    context_object_name = "objects_list"
 
     def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
+        self.object = super().get_object()
         self.object.views_count += 1
         self.object.save()
         return self.object
@@ -53,4 +55,5 @@ class BlogUpdateView(UpdateView):
 
 class BlogDeleteView(DeleteView):
     model = Blog
-    success_url = reverse_lazy("blog:blog_list")
+    template_name = "blog/blog_confirm_delete.html"
+    success_url = reverse_lazy("blog:home")
