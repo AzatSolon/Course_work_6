@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Рассылка
-    {% if title %}
+        {% if title %}
         - {{title}}
         {% endif %}
 
@@ -15,29 +15,34 @@
 
 </head>
 <body>
+
 {% include 'mail/includes/menu.html' %}
 
 
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
     <h1 class="display-4">
-                We will take care of our troubles
+        We will take care of our troubles
         <br>
         Mail
     </h1>
     <p class="lead">Mail - Приложение по работе с расссылками.
         <br>
 
-    </p>
-    <p class="lead">
 
     </p>
+    <p class="lead">
+        
+        </a>
+</div>
+
+</p>
 
 
 </div>
 
 
-    {% block content %}
-    {% endblock %}
+{% block content %}
+{% endblock %}
 
 <footer class="text-body-secondary py-5">
     <div class="container">

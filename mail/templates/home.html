@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load my_tags %}
+{% block content %}
+
+<div class="container">
+    <div class="row text-left">
+        <h2>Статистика</h2>
+        <p>Рассылок всего: {{ mailing_count }}</p>
+        <p>Активных рассылок: {{ active_mailing_count }}</p>
+        <p>Уникальных клиентов в базе: {{ unique_clients_count }}</p>
+    </div>
+<div>
+    <div class="container">
+        <div class="row text-center">
+            {% for object in random_posts %}
+            <div class="col-4">
+                <div class="card mb-4 box-shadow" style="height: 600px">
+                    {% if object.image %}
+                    <img class="rounded float-start" style="height: 300px" src="{{ object.image | media_filter }}">
+                    {% endif %}
+                    <div class="card-header">
+                        <h3 class="my-0 font-weight-normal">{{ object.title }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-1 text-body-secondary">{{ object.is_published }}</div>
+                        <div class="mb-1 text-body-secondary">Количество просмотров: {{ object.views_count }}</div>
+                        <p class="card-text mb-auto">{{ object.content | truncatechars:50 }}</p>
+                        <a href="{% url 'blog:post' object.slug %}"
+                           class="icon-link gap-1 icon-link-hover stretched-link">
+                            Читать далее
+                            <svg class="bi">
+                                <use xlink:href="#chevron-right"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
