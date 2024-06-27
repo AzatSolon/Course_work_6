@@ -58,20 +58,15 @@ class Mailing(models.Model):
     Модель рассылки
     """
 
-    DAILY = "daily"
-    WEEKLY = "weekly"
-    MONTHLY = "monthly"
-    REGULARITY_VARIANTS = [
-        (DAILY, "раз в день"),
-        (WEEKLY, "раз в неделю"),
-        (MONTHLY, "раз в месяц"),
-    ]
+    class MailingChoices(models.TextChoices):
+        DAILY = "D", "daily"
+        WEEKLY = "W", "weekly"
+        MONTHLY = "M", "monthly"
 
-    STATUS_CHOICES = [
-        ("CREATED", "Создана"),
-        ("IN_PROGRESS", "В процессе"),
-        ("COMPLETED", "Завершена"),
-    ]
+    class StatusChoices(models.TextChoices):
+        CREATED = "CR", "Создана"
+        IN_PROGRESS = "ON", "В процессе"
+        COMPLETED = "OFF", "Завершена"
 
     start_mailing = models.DateTimeField(
         default=timezone.now, verbose_name="Начало рассылки"
@@ -79,12 +74,12 @@ class Mailing(models.Model):
     end_mailing = models.DateTimeField(verbose_name="Конец рассылки", **NULLABLE)
     regularity = models.CharField(
         max_length=30,
-        choices=REGULARITY_VARIANTS,
+        choices=MailingChoices.choices,
+        default=MailingChoices.DAILY,
         verbose_name="Периодичность",
-        **NULLABLE,
     )
     status = models.CharField(
-        max_length=30, choices=STATUS_CHOICES, default="CREATED", verbose_name="Статус"
+        max_length=30, choices=StatusChoices.choices, default=StatusChoices.CREATED, verbose_name="Статус"
     )
     message = models.ForeignKey(
         Message, on_delete=models.CASCADE, verbose_name="Сообщение"
@@ -115,17 +110,21 @@ class Attempt(models.Model):
 
     ATTEMPT_CHOICES = [
         (ATTEMPT_SUCCESS, "Успешно"),
-        (ATTEMPT_FAIL, "Неуспешно"),
+        (ATTEMPT_FAIL, "Не успешно"),
     ]
 
-    attempt_date = models.DateTimeField(verbose_name="Дата отправки", auto_now_add=True)
+    attempt_date = models.DateTimeField(verbose_name="Дата отправки")
     status = models.CharField(
-        max_length=50, choices=ATTEMPT_CHOICES, verbose_name="Статус отправки"
+        max_length=50,
+        choices=ATTEMPT_CHOICES,
+        default=ATTEMPT_FAIL,
+        verbose_name="Статус отправки",
     )
     response = models.TextField(verbose_name="Ответ сервера", **NULLABLE)
     mailing = models.ForeignKey(
         Mailing, on_delete=models.CASCADE, verbose_name="Рассылка"
     )
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f"{self.attempt_date} ({self.status})"

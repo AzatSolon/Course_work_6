@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 
 from blog.models import Blog
 from config import settings
+from config.settings import EMAIL_HOST_USER
 from mail.models import Mailing, Attempt
 
 
@@ -22,7 +23,7 @@ def send_message(mailing):
         response = send_mail(
             subject=subject,
             message=message,
-            from_email=settings.EMAIL_HOST_USER,
+            from_email=EMAIL_HOST_USER,
             recipient_list=[client.email for client in mailing.clients.all()],
             fail_silently=False,
         )
