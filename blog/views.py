@@ -1,4 +1,6 @@
 from django.urls import reverse_lazy, reverse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import (
     ListView,
     DetailView,
@@ -13,6 +15,11 @@ from blog.models import Blog
 
 class BlogListView(ListView):
     model = Blog
+    template_name = "/blog/blog_list"
+
+    @method_decorator(cache_page(60 * 15))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -23,6 +30,10 @@ class BlogDetailView(DetailView):
     model = Blog
     template_name = "blog/blog_detail.html"
     context_object_name = "objects_list"
+
+    @method_decorator(cache_page(60 * 15))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_object(self, queryset=None):
         self.object = super().get_object()

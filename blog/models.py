@@ -1,19 +1,19 @@
 from django.db import models
 
+from mail.models import NULLABLE
+
 
 class Blog(models.Model):
-    title = models.CharField(max_length=100, verbose_name="Заголовок")
-    slug = models.CharField(max_length=100, verbose_name="Slug", null=True, blank=True)
-    content = models.TextField(verbose_name="Содержимое")
-    image = models.ImageField(
-        verbose_name="Изображение", blank=True, null=True, upload_to="blog/image"
-    )
-    views_count = models.PositiveIntegerField(verbose_name="Просмотры", default=0)
-    is_published = models.BooleanField(default=True, verbose_name="опубликовано")
+    title = models.CharField(max_length=150, verbose_name="Заголовок", **NULLABLE)
+    body = models.TextField(verbose_name="Содержимое", **NULLABLE)
+    image = models.ImageField(upload_to="blog/", verbose_name="Изображение", **NULLABLE)
+    views_count = models.IntegerField(default=0, verbose_name="Количество просмотров")
+    publish_date = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
+    is_published = models.BooleanField(default=True, verbose_name="Опубликован")
 
     def __str__(self):
-        return self.title
+        return f"{self.title}: {self.views_count}, {self.publish_date}"
 
     class Meta:
-        verbose_name = "блог"
-        verbose_name_plural = "блоги"
+        verbose_name = "Запись"
+        verbose_name_plural = "Записи"

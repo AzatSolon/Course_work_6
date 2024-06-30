@@ -79,7 +79,10 @@ class Mailing(models.Model):
         verbose_name="Периодичность",
     )
     status = models.CharField(
-        max_length=30, choices=StatusChoices.choices, default=StatusChoices.CREATED, verbose_name="Статус"
+        max_length=30,
+        choices=StatusChoices.choices,
+        default=StatusChoices.CREATED,
+        verbose_name="Статус",
     )
     message = models.ForeignKey(
         Message, on_delete=models.CASCADE, verbose_name="Сообщение"

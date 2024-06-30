@@ -14,11 +14,10 @@ app_name = BlogConfig.name
 
 urlpatterns = [
     path("", BlogListView.as_view(), name="blog_list"),
+    path("create/", BlogCreateView.as_view(), name="blog_create"),
     path(
-        "blog/<int:pk>/", cache_page(60)(BlogDetailView.as_view()), name="view_record"
+        "<int:pk>/", cache_page(60)(BlogDetailView.as_view()), name="view_record"
     ),
-    path("blog/<slug:slug>/", cache_page(60)(BlogDetailView.as_view()), name="post"),
-    path("blog/create/", BlogCreateView.as_view(), name="blog_create"),
-    path("blog/<int:pk>/update/", BlogUpdateView.as_view(), name="blog_update"),
-    path("blog/<int:pk>/delete/", BlogDeleteView.as_view(), name="blog_delete"),
+    path("edit/<int:pk>/", BlogUpdateView.as_view(), name="blog_update"),
+    path("delete/<int:pk>/", BlogDeleteView.as_view(), name="blog_delete"),
 ]
