@@ -5,6 +5,6 @@ from blog.models import Blog
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ("pk", "title", "is_published", "views_count")
-    list_filter = ("is_published", "title")
+    list_display = ("pk", "title", "publish_date", "views_count")
+    list_filter = ("publish_date", "title")
     verbose_name = "Статьи"

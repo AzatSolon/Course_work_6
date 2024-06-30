@@ -13,7 +13,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, verbose_name="E-mail")
     name = models.CharField(max_length=150, verbose_name="Имя")
     last_name = models.CharField(max_length=150, verbose_name="Фамилия")
-
+    is_verified = models.BooleanField(default=False, verbose_name='Подтверждён')
     token = models.CharField(max_length=100, verbose_name="Токен", **NULLABLE)
 
     USERNAME_FIELD = "email"
@@ -25,10 +25,6 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
-        permissions = [
-            ("deactivate_user", "Can deactivate users"),
-            ("view_all_users", "Can view all users"),
-        ]
 
 
 class UserManager(BaseUserManager):

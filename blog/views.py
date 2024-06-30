@@ -1,6 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy, reverse
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from django.views.generic import (
     ListView,
     DetailView,
@@ -10,30 +9,19 @@ from django.views.generic import (
 )
 from pytils.translit import slugify
 
+from blog.forms import BlogForm
 from blog.models import Blog
 
 
 class BlogListView(ListView):
     model = Blog
-    template_name = "/blog/blog_list"
-
-    @method_decorator(cache_page(60 * 15))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(is_published=True)
+        return super().get_queryset().order_by('-publish_date')
 
 
 class BlogDetailView(DetailView):
     model = Blog
-    template_name = "blog/blog_detail.html"
-    context_object_name = "objects_list"
-
-    @method_decorator(cache_page(60 * 15))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get_object(self, queryset=None):
         self.object = super().get_object()
@@ -42,29 +30,46 @@ class BlogDetailView(DetailView):
         return self.object
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    """
+    Контроллер для создания новой статьи
+    """
     model = Blog
-    fields = ["title", "content", "image", "views_count", "is_published"]
-    success_url = reverse_lazy("blog:blog_list")
+    form_class = BlogForm
+    success_url = reverse_lazy('blog:blog_list')
+    permission_required = 'blog.add_blog'
 
     def form_valid(self, form):
         if form.is_valid():
-            new_name = form.save()
-            new_name.slug = slugify(new_name.title)
-            new_name.save()
-
+            new_post = form.save()
+            new_post.slug = slugify(new_post.title)
+            new_post.save()
         return super().form_valid(form)
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    """
+    Контроллер для редактирования статьи
+    """
     model = Blog
-    fields = ["title", "content", "image", "views_count", "is_published"]
+    fields = '__all__'
+    permission_required = 'blog.blog_update'
+
+    def form_valid(self, form):
+        if form.is_valid():
+            new_post = form.save()
+            new_post.slug = slugify(new_post.title)
+            new_post.save()
+        return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("blog:blog_detail", args=[self.kwargs.get("pk")])
+        return reverse('blog:blog', args=[self.kwargs.get('slug')])
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    """
+    Контроллер для удаления статьи
+    """
     model = Blog
-    template_name = "blog/blog_confirm_delete.html"
-    success_url = reverse_lazy("blog:home")
+    success_url = reverse_lazy('blog:post_list')
+    permission_required = 'blog.blog_delete'
