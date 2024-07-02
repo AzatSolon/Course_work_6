@@ -1,7 +1,6 @@
 import random
 
 from django.conf import settings
-from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.views import LogoutView
 from django.shortcuts import get_object_or_404, redirect, resolve_url, render
@@ -11,7 +10,6 @@ from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from mail.services import send_mail
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
-
 
 CHARS = "+-*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
@@ -66,13 +64,6 @@ def res_password(request):
         user.save()
         return redirect(reverse("users:login"))
     return render(request, "users/password_recovery.html")
-
-
-def email_verification(request, token):
-    user = get_object_or_404(User, token=token)
-    user.is_active = True
-    user.save()
-    return redirect(reverse("users:login"))
 
 
 class ProfileView(UpdateView):

@@ -10,4 +10,4 @@ class BlogForm(StyleMixin, ModelForm):
 
     class Meta:
         model = Blog
-        exclude = ['slug', 'views_count']
+        exclude = ["slug", "views_count"]

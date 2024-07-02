@@ -16,7 +16,6 @@ class Client(models.Model):
     surname = models.CharField(max_length=150, verbose_name="Фамилия", **NULLABLE)
     patronymic = models.CharField(max_length=150, verbose_name="Отчество", **NULLABLE)
     comment = models.TextField(max_length=250, verbose_name="Комментарий", **NULLABLE)
-
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="пользователь", **NULLABLE
     )
@@ -31,7 +30,7 @@ class Client(models.Model):
 
 class Message(models.Model):
     """
-    Модель сообщения
+    Модель сообщения рассылки
     """
 
     subject = models.CharField(max_length=150, verbose_name="тема письма")
@@ -46,7 +45,7 @@ class Message(models.Model):
     )
 
     def __str__(self):
-        return self.subject
+        return f"{self.subject} : {self.text}"
 
     class Meta:
         verbose_name = "сообщение для рассылки"
@@ -58,33 +57,42 @@ class Mailing(models.Model):
     Модель рассылки
     """
 
-    class MailingChoices(models.TextChoices):
-        DAILY = "D", "daily"
-        WEEKLY = "W", "weekly"
-        MONTHLY = "M", "monthly"
+    EVERY_TWO_HOURS = "Каждые 2 часа"
+    DAILY = "Ежедневно"
+    WEEKLY = "Еженедельно"
+    MONTHLY = "Ежемесечно"
 
-    class StatusChoices(models.TextChoices):
-        CREATED = "CR", "Создана"
-        IN_PROGRESS = "ON", "В процессе"
-        COMPLETED = "OFF", "Завершена"
+    PERIODS = [
+        (EVERY_TWO_HOURS, "Каждые 2 часа"),
+        (DAILY, "Ежедневно"),
+        (WEEKLY, "Еженедельно"),
+        (MONTHLY, "Ежемесечно"),
+    ]
 
-    start_mailing = models.DateTimeField(
-        default=timezone.now, verbose_name="Начало рассылки"
-    )
-    end_mailing = models.DateTimeField(verbose_name="Конец рассылки", **NULLABLE)
+    STATUS_CREATED = "Создана"
+    STATUS_STARTED = "Активна"
+    STATUS_COMPLETED = "Завершено"
+
+    STATUS = [
+        (STATUS_CREATED, "Создана"),
+        (STATUS_STARTED, "Активна"),
+        (STATUS_COMPLETED, "Завершено"),
+    ]
+
+    start_mailing = models.TimeField(verbose_name="начало рассылки")
+    end_mailing = models.TimeField(verbose_name="Конец рассылки", **NULLABLE)
     regularity = models.CharField(
         max_length=30,
-        choices=MailingChoices.choices,
-        default=MailingChoices.DAILY,
+        choices=PERIODS,
         verbose_name="Периодичность",
     )
     status = models.CharField(
         max_length=30,
-        choices=StatusChoices.choices,
-        default=StatusChoices.CREATED,
+        choices=STATUS,
+        default="created",
         verbose_name="Статус",
     )
-    message = models.ForeignKey(
+    message = models.OneToOneField(
         Message, on_delete=models.CASCADE, verbose_name="Сообщение"
     )
     client = models.ManyToManyField(Client, verbose_name="Клиенты")
@@ -93,7 +101,7 @@ class Mailing(models.Model):
     )
 
     def __str__(self):
-        return f"С {self.start_mailing} {self.regularity} ({self.status})."
+        return f"{self.regularity} ({self.message})."
 
     class Meta:
         verbose_name = "Рассылка"

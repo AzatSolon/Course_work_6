@@ -17,7 +17,7 @@ class BlogListView(ListView):
     model = Blog
 
     def get_queryset(self):
-        return super().get_queryset().order_by('-publish_date')
+        return super().get_queryset().order_by("-publish_date")
 
 
 class BlogDetailView(DetailView):
@@ -34,10 +34,11 @@ class BlogCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """
     Контроллер для создания новой статьи
     """
+
     model = Blog
     form_class = BlogForm
-    success_url = reverse_lazy('blog:blog_list')
-    permission_required = 'blog.add_blog'
+    success_url = reverse_lazy("blog:blog_list")
+    permission_required = "blog.add_blog"
 
     def form_valid(self, form):
         if form.is_valid():
@@ -51,9 +52,10 @@ class BlogUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Контроллер для редактирования статьи
     """
+
     model = Blog
-    fields = '__all__'
-    permission_required = 'blog.blog_update'
+    fields = "__all__"
+    permission_required = "blog.blog_update"
 
     def form_valid(self, form):
         if form.is_valid():
@@ -63,13 +65,14 @@ class BlogUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('blog:blog', args=[self.kwargs.get('slug')])
+        return reverse("blog:blog", args=[self.kwargs.get("slug")])
 
 
 class BlogDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Контроллер для удаления статьи
     """
+
     model = Blog
-    success_url = reverse_lazy('blog:post_list')
-    permission_required = 'blog.blog_delete'
+    success_url = reverse_lazy("blog:post_list")
+    permission_required = "blog.blog_delete"

@@ -22,11 +22,11 @@
             <a href="{% url 'blog:post_update' object.slug %}"
                class="btn btn-sm btn-outline-secondary">Редактировать статью</a>
             {% endif %}
-            {% if perms.blog.delete_post %}
-            <a href="{% url 'blog:post_delete' object.slug %}"
+            {% if perms.blog.delete_blog %}
+            <a href="{% url 'blog:blog_delete' object.slug %}"
                class="btn btn-sm btn-outline-secondary">Удалить</a>
             {% endif %}
-            <a href="{% url 'blog:post_list' %}"
+            <a href="{% url 'blog:blog_list' %}"
                class="btn btn-sm btn-outline-secondary">Назад</a>
         </div>
     </div>

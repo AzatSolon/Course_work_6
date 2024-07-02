@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-3">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">{{ object.subject }}</h4>
+                </div>
+                <div class="card-body">
+                    <p>{{ object.text }}</p>
+                    <div class="btn-group">
+                        <a href="{% url 'mail:message_update' object.pk %}"
+                           class="btn btn-sm btn-outline-secondary">Редактировать сообщение
+                        </a>
+                        <a href="{% url 'mail:message_delete' object.pk %}"
+                           class="btn btn-sm btn-outline-secondary">Удалить сообщение
+                        </a>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+
+{% endblock %}
