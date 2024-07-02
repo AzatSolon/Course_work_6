@@ -5,9 +5,9 @@ from users.apps import UsersConfig
 from users.views import (
     RegisterView,
     ProfileView,
-    email_verification,
     UserListView,
     UserDetailView,
+    verify_view,
     res_password,
     my_logout_then_login,
 )
@@ -19,7 +19,7 @@ urlpatterns = [
     path("logout/", my_logout_then_login, name="logout"),
     path("register/", RegisterView.as_view(), name="register"),
     path("profile/", ProfileView.as_view(), name="profile"),
-    path("email-confirm/<str:token>/", email_verification, name="email-confirm"),
+    path("email-confirm/<str:token>/", verify_view, name="verify_success"),
     path("users_list/", UserListView.as_view(), name="view_all_users"),
     path("password/reset/", res_password, name="password_recovery"),
     path("detail/<int:pk>/", UserDetailView.as_view(), name="view_user"),

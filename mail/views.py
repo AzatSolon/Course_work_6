@@ -40,7 +40,6 @@ class MailingDetailView(LoginRequiredMixin, DetailView):
     """
 
     model = Mailing
-    success_url = reverse_lazy("mail:base")
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
@@ -94,7 +93,7 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
     form_class = MailingForm
 
     def get_success_url(self):
-        return reverse_lazy("mail:mailing", args=[self.kwargs.get("pk")])
+        return reverse_lazy("mail:mail", args=[self.kwargs.get("pk")])
 
     def get_form_class(self):
         user = self.request.user
