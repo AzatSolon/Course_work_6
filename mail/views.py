@@ -67,6 +67,7 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         user = self.request.user
         self.object.owner = user
+        return super().form_valid(form)
 
     def get_form_kwargs(self):
         kwargs = super(MailingCreateView, self).get_form_kwargs()

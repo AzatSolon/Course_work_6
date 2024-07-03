@@ -27,6 +27,7 @@ class RegisterView(CreateView):
         form.verified_pass = token
         user = form.save()
         user.token = token
+        user.is_active = False
         send_mail(
             subject="Верификация почты",
             message=f"Поздравляем с регистрацией в сервисе Рассылки \n"
