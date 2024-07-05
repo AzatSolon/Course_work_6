@@ -9,6 +9,8 @@ from users.models import User
 
 
 class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField(max_length=200, help_text="Обязтельно для ввода")
+
     class Meta:
         model = User
         fields = (

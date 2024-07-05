@@ -14,6 +14,10 @@ from blog.models import Blog
 
 
 class BlogListView(ListView):
+    """
+    Контроллер просмотра постов
+    """
+
     model = Blog
 
     def get_queryset(self):
@@ -21,6 +25,10 @@ class BlogListView(ListView):
 
 
 class BlogDetailView(DetailView):
+    """
+    Контролер просмотра одного поста
+    """
+
     model = Blog
 
     def get_object(self, queryset=None):
@@ -65,7 +73,7 @@ class BlogUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("blog:blog", args=[self.kwargs.get("slug")])
+        return reverse("blog:blog_info", args=[self.kwargs.get("slug")])
 
 
 class BlogDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):

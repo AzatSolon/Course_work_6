@@ -79,8 +79,17 @@ class Mailing(models.Model):
         (STATUS_COMPLETED, "Завершено"),
     ]
 
-    start_mailing = models.TimeField(verbose_name="начало рассылки")
-    end_mailing = models.TimeField(verbose_name="Конец рассылки", **NULLABLE)
+    start_time = models.DateTimeField(
+        default=timezone.now,
+        verbose_name='начало рассылки'
+    )
+    end_time = models.DateTimeField(
+        default=(timezone.now() + timezone.timedelta(days=1)),
+        verbose_name='конец рассылки'
+    )
+    next_date = models.DateTimeField(
+        default=timezone.now,
+        verbose_name='дата следующей рассылки')
     regularity = models.CharField(
         max_length=30,
         choices=PERIODS,

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "blog",
     "mail",
     "redis",
+    "django_apscheduler",
 ]
 
 MIDDLEWARE = [
@@ -135,6 +136,8 @@ MEDIA_ROOT = BASE_DIR.joinpath("media")
 
 AUTH_USER_MODEL = "users.User"
 
+LOGIN_URL = "users:login"
+
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
@@ -147,6 +150,9 @@ EMAIL_USE_SSL = False
 
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
 
 CACHE_ENABLED = True
 if CACHE_ENABLED:

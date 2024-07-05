@@ -16,6 +16,8 @@
                     <li><a href="{% url 'mail:client_create' %}" class="text-white">Добавить Клиента</a></li>
                     <li><a href="{% url 'mail:message_list' %}" class="text-white">Ваши Сообщения</a></li>
                     <li><a href="{% url 'mail:message_create' %}" class="text-white">Создание Сообщения </a>
+                    <li><a href="{% url 'mail:mailing_create' %}" class="text-white">Создание Paссылки </a>
+                    <li><a href="{% url 'mail:mailing_list' %}" class="text-white">Ваши Paссылки </a>
                     </li>
                     {% else %}
                     <li><a href="{% url 'users:register' %}" class="text-white">Регистрация</a></li>

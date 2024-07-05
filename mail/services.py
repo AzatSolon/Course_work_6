@@ -38,11 +38,11 @@ def send_message(mailing):
             )
 
             # Устанавливаем дату следующей отправки письма
-            if mailing.periodicity == "DAILY":
+            if mailing.regularity == "DAILY":
                 mailing.start_mailing += datetime.timedelta(days=1)
-            elif mailing.periodicity == "WEEKLY":
+            elif mailing.regularity == "WEEKLY":
                 mailing.start_mailing += datetime.timedelta(days=7)
-            elif mailing.periodicity == "MONTHLY":
+            elif mailing.regularity == "MONTHLY":
                 mailing.start_mailing += datetime.timedelta(days=30)
 
             mailing.save()
