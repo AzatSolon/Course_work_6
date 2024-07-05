@@ -32,8 +32,10 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                        <a href="{% url 'mailing:mailing' object.pk %}"
+                        <a href="{% url 'mail:mail' object.pk %}"
                            class="btn btn-sm btn-outline-secondary">Просмотр рассылки</a>
+                        <a href="{% url 'mail:mailing_list' %}"
+                           class="btn btn-sm btn-outline-secondary">Просмотр списка рассылок</a>
                     </div>
                 </div>
             </div>

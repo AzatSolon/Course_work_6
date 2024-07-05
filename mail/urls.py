@@ -33,7 +33,6 @@ urlpatterns = (
     path("mail/create/", MailingCreateView.as_view(), name="mailing_create"),
     path("mail/<int:pk>/update/", MailingUpdateView.as_view(), name="mailing_update"),
     path("mail/<int:pk>/delete/", MailingDeleteView.as_view(), name="mailing_delete"),
-    path("mailing_list_send/", MailingListViewSend.as_view(), name="mailing_list_send"),
     path("client/", ClientListView.as_view(), name="client_list"),
     path("client/<int:pk>/", ClientDetailView.as_view(), name="client"),
     path("client/create/", ClientCreateView.as_view(), name="client_create"),

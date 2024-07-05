@@ -15,10 +15,14 @@ CHARS = "+-*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
 
 
 class RegisterView(CreateView):
+    """
+    Контроллер создания(регистрации) пользователя
+    """
+
     model = User
     form_class = UserRegisterForm
     template_name = "users/user_register.html"
-    success_url = reverse_lazy("users:login")
+    success_url = reverse_lazy("mail:home")
 
     def form_valid(self, form):
         token = ""
@@ -42,8 +46,14 @@ class RegisterView(CreateView):
 
 
 def verify_view(request, token):
+    if request.method == "POST":
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
     user = User.objects.get(token=token)
-    user.is_verified = True
+    user.is_active = True
     user.save()
     return render(request, "users/user_verify.html")
 
@@ -68,6 +78,10 @@ def res_password(request):
 
 
 class ProfileView(UpdateView):
+    """
+    Контроллер профиля
+    """
+
     model = User
     form_class = UserProfileForm
     success_url = reverse_lazy("users:profile")
@@ -77,6 +91,10 @@ class ProfileView(UpdateView):
 
 
 class UserListView(PermissionRequiredMixin, ListView):
+    """
+    Контролер просмотра пользователей
+    """
+
     model = User
     permission_required = "users.view_all_users"
 
@@ -96,12 +114,16 @@ class UserListView(PermissionRequiredMixin, ListView):
 
 
 class UserDetailView(DetailView):
+    """
+    Контроллер просмотра одного пользователя
+    """
+
     model = User
 
 
 class MyLogoutView(LogoutView):
     """
-    класс для выхода из системы с помощью GET
+    Контроллер для выхода из системы с помощью GET
     """
 
     http_method_names = ["get", "post", "options"]
