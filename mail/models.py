@@ -80,16 +80,15 @@ class Mailing(models.Model):
     ]
 
     start_time = models.DateTimeField(
-        default=timezone.now,
-        verbose_name='начало рассылки'
+        default=timezone.now, verbose_name="начало рассылки"
     )
     end_time = models.DateTimeField(
         default=(timezone.now() + timezone.timedelta(days=1)),
-        verbose_name='конец рассылки'
+        verbose_name="конец рассылки",
     )
     next_date = models.DateTimeField(
-        default=timezone.now,
-        verbose_name='дата следующей рассылки')
+        default=timezone.now, verbose_name="дата следующей рассылки"
+    )
     regularity = models.CharField(
         max_length=30,
         choices=PERIODS,

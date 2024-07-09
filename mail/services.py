@@ -2,6 +2,7 @@ import datetime
 import smtplib
 
 import pytz
+from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.cache import cache
 from django.core.mail import send_mail
 
@@ -77,6 +78,17 @@ def send_scheduled_mail():
         mailing.save()
         send_message(mailing)
     print("Mailing completed")
+
+
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+
+    # Проверка, добавлена ли задача уже
+    if not scheduler.get_jobs():
+        scheduler.add_job(send_message, "interval", seconds=30)
+
+    if not scheduler.running:
+        scheduler.start()
 
 
 def get_cached_blogs():
