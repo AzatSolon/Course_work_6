@@ -11,7 +11,7 @@ from mail.services import send_mail
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
 
-CHARS = "+-*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+CHARS = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
 
 class RegisterView(CreateView):
