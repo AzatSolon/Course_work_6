@@ -47,7 +47,7 @@ class MailingForm(StyleMixin, ModelForm):
     class Meta:
         model = Mailing
         exclude = (
-            "next_send_time",
+            "next_date",
             "owner",
         )
 
