@@ -5,6 +5,11 @@ from users.models import User
 
 NULLABLE = {"blank": True, "null": True}
 
+LOG_CHOICES = (
+    (True, "Успешно"),
+    (False, "Неудача"),
+)
+
 
 class Client(models.Model):
     """
@@ -151,3 +156,26 @@ class Attempt(models.Model):
     class Meta:
         verbose_name = "Попытка"
         verbose_name_plural = "Попытки"
+
+
+class Logger(models.Model):
+    mailing = models.ForeignKey(
+        Mailing, on_delete=models.CASCADE, verbose_name="Рассылка", **NULLABLE
+    )
+    last_time_sending = models.DateTimeField(
+        auto_now=True, verbose_name="Время рассылки", **NULLABLE
+    )
+    status = models.CharField(
+        default=False,
+        max_length=30,
+        choices=LOG_CHOICES,
+        verbose_name="Попытка",
+        **NULLABLE,
+    )
+
+    def __str__(self):
+        return f"{self.last_time_sending} - {self.status}"
+
+    class Meta:
+        verbose_name = "Лог"
+        verbose_name_plural = "Логи"
