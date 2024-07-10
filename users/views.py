@@ -3,11 +3,12 @@ import random
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.views import LogoutView
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, resolve_url, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
 
-from mail.services import send_mail
+
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
 

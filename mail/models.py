@@ -91,13 +91,14 @@ class Mailing(models.Model):
         default=(timezone.now() + timezone.timedelta(days=1)),
         verbose_name="конец рассылки",
     )
-    next_date = models.DateTimeField(
-        default=timezone.now, verbose_name="дата следующей рассылки"
-    )
     regularity = models.CharField(
         max_length=30,
         choices=PERIODS,
         verbose_name="Периодичность",
+    )
+    next_date = models.DateTimeField(
+        default=(timezone.now() + timezone.timedelta(hours=2)),
+        verbose_name="дата следующей рассылки",
     )
     status = models.CharField(
         max_length=30,
