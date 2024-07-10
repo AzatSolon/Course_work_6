@@ -9,7 +9,7 @@ from mail.models import Mailing, Attempt
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        mailings = Mailing.objects.filter(status="Запущена")
+        mailings = Mailing.objects.filter(status="Активна")
 
         for mailing in mailings:
             clients = mailing.clients.all()
