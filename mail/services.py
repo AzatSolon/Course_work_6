@@ -1,15 +1,13 @@
-import datetime
 import smtplib
+from datetime import datetime
 
-import pytz
-from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.cache import cache
 from django.core.mail import send_mail
 
 from blog.models import Blog
 from config import settings
 from config.settings import EMAIL_HOST_USER
-from mail.models import Mailing, Attempt
+from mail.models import Attempt
 
 
 def send_message(mailing):
@@ -53,42 +51,6 @@ def send_message(mailing):
         Attempt.objects.create(
             status=Attempt.ATTEMPT_FAIL, response=error, mailing=mailing
         )
-
-
-def send_scheduled_mail():
-    """
-    Проверяет, какие рассылки должны быть завершены,
-    а какие необходимо отправить в данный момент времени,
-    и осуществляет их отправку
-    """
-    current_datetime = datetime.datetime.now(pytz.timezone(settings.TIME_ZONE))
-
-    # Проверяем, какие рассылки должны быть завершены в этот момент времени
-    for mailing in Mailing.objects.filter(status="IN_PROGRESS").filter(
-        end_mailing__lt=current_datetime
-    ):
-        mailing.status = "COMPLETED"
-        mailing.save()
-    # Проверяем, какие рассылки должны быть отправлены в этот момент времени и производим отправку
-    mailings = Mailing.objects.filter(status__in=["CREATED", "IN_PROGRESS"]).filter(
-        start_mailing__lte=current_datetime
-    )
-    for mailing in mailings:
-        mailing.status = "IN_PROGRESS"
-        mailing.save()
-        send_message(mailing)
-    print("Mailing completed")
-
-
-def start_scheduler():
-    scheduler = BackgroundScheduler()
-
-    # Проверка, добавлена ли задача уже
-    if not scheduler.get_jobs():
-        scheduler.add_job(send_message, "interval", seconds=30)
-
-    if not scheduler.running:
-        scheduler.start()
 
 
 def get_cached_blogs():
