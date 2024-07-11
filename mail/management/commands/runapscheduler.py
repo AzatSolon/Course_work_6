@@ -36,7 +36,7 @@ def my_job():
 
     zone = pytz.timezone(settings.TIME_ZONE)
     today = datetime.now(zone)
-    mailings = Mailing.objects.all().filter(is_active=True)
+    mailings = Mailing.objects.all()
 
     for mailing in mailings:
         if mailing.status != "Завершено" and mailing.status != "Создана":
@@ -49,8 +49,8 @@ def my_job():
             )
 
             result = send_mail(
-                subject=mailing.mail.subject,
-                message=mailing.mail.message,
+                subject=mailing.message.subject,
+                message=mailing.message.text,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=emails_list,
             )
@@ -76,7 +76,7 @@ def my_job():
 
             mailing.save()
             print(
-                f"Рассылка {mailing.massage} отправлена {today} (должна была {mailing.next_date})"
+                f"Рассылка {mailing.message} отправлена {today} (должна была {mailing.next_date})"
             )
 
 
@@ -88,7 +88,7 @@ class Command(BaseCommand):
         scheduler.add_jobstore(DjangoJobStore(), "default")
 
         scheduler.add_job(
-            my_job(),
+            my_job,
             trigger=CronTrigger(minute="*/1"),  # Every 1 minute
             id="my_job",  # The `id` assigned to each job MUST be unique
             max_instances=1,
